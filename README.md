@@ -1,12 +1,13 @@
-# WarnIf2
+# WarnIf
 
-TODO: Write a gem description
+WarnIf provides you with validation warnings on your ActiveRecord
+models. Unlike errors, warnings do not prevent the record from saving.
 
 ## Installation
 
 Add this line to your application's Gemfile:
 
-    gem 'warn_if2'
+    gem 'warn_if'
 
 And then execute:
 
@@ -14,11 +15,35 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install warn_if2
+    $ gem install warn_if
 
 ## Usage
 
-TODO: Write usage instructions here
+Include WarnIf in any models you want to have warnings on.
+
+  class MyModel < ActiveRecord::Base
+    Include WarnIf
+
+    warn_if :condition => :warning_triggered?,
+            :on => :update,
+            :message => "Hey, you might want to check this."
+
+    warn_if :condition => Proc.new {|m| m.this && m.that},
+            :message => "This and that are true, are you sure?"
+
+    def warning_triggered?
+      ...
+    end
+
+    ...
+  end
+
+Then give it a try.
+
+  m = MyModel.first
+  m.valid? => true
+  m.warned? => true
+  m.warnings => {:base => "This and that are true, are you sure?"}
 
 ## Contributing
 

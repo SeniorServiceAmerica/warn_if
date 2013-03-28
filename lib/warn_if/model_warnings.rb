@@ -1,7 +1,7 @@
 class ModelWarnings < Hash
   def initialize
     super
-    self[:base] = []
+    initial_setup
     self
   end
 
@@ -10,9 +10,8 @@ class ModelWarnings < Hash
   end
 
   def clear
-    # self.keys.each {|k| self[k] = []}
     super
-    self[:base] = []
+    initial_setup
   end
 
   def clear?
@@ -25,5 +24,11 @@ class ModelWarnings < Hash
 
   def with_severity(severity)
     all.select {|w| w.severity == severity}
+  end
+
+  private
+
+  def initial_setup
+    self[:base] = []
   end
 end
