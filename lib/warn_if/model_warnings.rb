@@ -1,8 +1,35 @@
-class ModelWarnings < Hash
+require 'forwardable'
+
+class ModelWarnings
+  include Enumerable
+  extend Forwardable
+  def_delegators :@warnings, :keys, :values, :each
+  attr_reader :warnings
+
   def initialize
-    super
+    @warnings = {}
     initial_setup
     self
+  end
+
+  def add(attribute, warning)
+    self[attribute.to_sym] << warning
+  end
+
+  def [](attribute)
+    get(attribute.to_sym) || set(attribute.to_sym, [])
+  end
+
+  def []=(attribute, error)
+    self[attribute] << error
+  end
+
+  def get(key)
+    warnings[key]
+  end
+
+  def set(key, value)
+    warnings[key] = value
   end
 
   def all
@@ -29,6 +56,6 @@ class ModelWarnings < Hash
   private
 
   def initial_setup
-    self[:base] = []
+    @warnings[:base] = []
   end
 end

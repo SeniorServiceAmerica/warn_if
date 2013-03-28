@@ -45,6 +45,17 @@ Then give it a try.
   m.warned? => true
   m.warnings => {:base => "This and that are true, are you sure?"}
 
+### Adding Warnings
+
+Adding and working with warnings works the same as working with the
+Errors collection in ActiveModel:
+
+  @it = MyModel.new
+  @it.warnings.add(:foo, "Uh oh") => ["Uh oh"]
+  @it.warnings[:foo] = "Now you've done it" => ["Uh oh", "Now you've done it"]
+  @it.warnings.add("foo", "Again?") => ["Uh oh", "Now you've done it", "Again?"]
+  @it.warnings["foo"] = "Still" => ["Uh oh", "Now you've done it", "Again?", "Still"]
+
 ## Contributing
 
 1. Fork it
