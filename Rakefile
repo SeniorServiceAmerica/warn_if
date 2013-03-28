@@ -4,7 +4,9 @@ require "bundler/gem_tasks"
 require 'rake/testtask'
 
 Rake::TestTask.new do |t|
-  t.libs << 'test'
+  t.libs << 'lib/warn_if'
+  t.test_files = FileList['test/warn_if/*_test.rb']
+  t.verbose = true
 end
 
 desc "Run tests"
