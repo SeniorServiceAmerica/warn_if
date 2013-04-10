@@ -20,8 +20,8 @@ class ModelWarnings
     get(attribute.to_sym) || set(attribute.to_sym, [])
   end
 
-  def []=(attribute, error)
-    self[attribute] << error
+  def []=(attribute, warning)
+    self[attribute] << warning
   end
 
   def get(key)
