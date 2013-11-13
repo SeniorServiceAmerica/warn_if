@@ -1,7 +1,7 @@
 class WarningValidator < ActiveModel::Validator
   def validate(record)
     if warning_condition?(record)
-      record.warnings[:base] << ModelWarning.new(options[:label],options[:message],options[:severity],new_condition?(record))
+      record.warnings[:base] << ModelWarning.new(options[:label],message(record),options[:severity],new_condition?(record))
     end
   end
 
@@ -10,6 +10,16 @@ class WarningValidator < ActiveModel::Validator
       options[:condition].call(record)
     else
       record.method(options[:condition]).call
+    end
+  end
+
+  def message(record)
+    if options[:message].respond_to?(:call)
+      options[:message].call(record)
+    elsif record.respond_to?(options[:message])
+      record.method(options[:message]).call
+    else
+      options[:message].to_s
     end
   end
 
