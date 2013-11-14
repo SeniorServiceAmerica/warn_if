@@ -37,7 +37,7 @@ class ModelWarnings
   end
 
   def clear
-    super
+    warnings.clear
     initial_setup
   end
 
