@@ -24,6 +24,10 @@ class WarningValidator < ActiveModel::Validator
   end
 
   def new_condition?(record)
-    options[:new_condition].call(record)
+    if options[:new_condition].respond_to?(:call)
+      options[:new_condition].call(record)
+    else
+      record.method(options[:new_condition]).call
+    end
   end
 end

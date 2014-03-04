@@ -65,11 +65,26 @@ describe WarningValidator do
   end
 
   describe "#new_condition?" do
-    before do
-      options[:new_condition] = Proc.new { |record| record.changed? }
+    describe "when options[:new_condition] is the name of a method" do
+      let(:new_condition_method) { :changed? }
+      before do
+        options[:new_condition] = new_condition_method
+      end
+
+      it "sends the method to the object being validated" do
+        subject.new_condition?(record).must_equal record.send(new_condition_method)
+      end
     end
-    it "calls the object with the record" do
-      subject.new_condition?(record).must_equal options[:new_condition].call(record)
+
+    describe "when options[:new_condition] is callable object" do
+      let(:new_condition_callable) { Proc.new { |record| record.favorite_number < 5 } }
+      before do
+        options[:new_condition] = new_condition_callable
+      end
+
+      it "calls the object with the record" do
+        subject.new_condition?(record).must_equal options[:new_condition].call(record)
+      end
     end
   end
 
@@ -145,10 +160,11 @@ end
 
 class TestModel 
   include WarnIf
-  attr_accessor :favorite_number
+  attr_accessor :favorite_number, :changed
   
   def initialize(favorite_number)
-    self.favorite_number = favorite_number
+    self.favorite_number  = favorite_number
+    self.changed          = [true, false].sample
   end
 
   def even?
@@ -156,7 +172,7 @@ class TestModel
   end
 
   def changed?
-    true
+    changed
   end
 
   def tell_me_your_favorite_number
